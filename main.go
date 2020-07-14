@@ -2,36 +2,40 @@ package main
 
 import (
 	"context"
-	"github.com/googleapis/gax-go/v2"
-	"google.golang.org/api/option"
-	"google.golang.org/grpc"
-	"fmt"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"log"
 	"os"
-	instance "cloud.google.com/go/spanner/admin/instance/apiv1"
-	instancepb "google.golang.org/genproto/googleapis/spanner/admin/instance/v1"
 	"os/exec"
+
+	database "cloud.google.com/go/spanner/admin/database/apiv1"
+	instance "cloud.google.com/go/spanner/admin/instance/apiv1"
+	"github.com/googleapis/gax-go/v2"
+	"google.golang.org/api/option"
+	databasepb "google.golang.org/genproto/googleapis/spanner/admin/database/v1"
+	instancepb "google.golang.org/genproto/googleapis/spanner/admin/instance/v1"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
 	ctx := context.Background()
 	go func() {
-		if err := createInstance(ctx); err != nil {
-			panic(err)}
+		if err := ensureDatabase(ctx); err != nil {
+			panic(err)
+		}
 	}()
 	(&exec.Cmd{
-		Path: "./gateway_main",
-		Args: []string{"--hostname", "0.0.0.0"},
+		Path:   "./gateway_main",
+		Args:   []string{"--hostname", "0.0.0.0"},
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 	}).Run()
 }
 
-func createInstance(ctx context.Context) error {
+func ensureDatabase(ctx context.Context) error {
 	inst := os.Getenv("SPANNER_INSTANCE_ID")
 	proj := os.Getenv("SPANNER_PROJECT_ID")
+	db := os.Getenv("SPANNER_DATABASE_ID")
 
 	if inst != "" && proj != "" {
 		ic, err := instance.NewInstanceAdminClient(ctx,
@@ -42,7 +46,6 @@ func createInstance(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("connected")
 		defer func() { _ = ic.Close() }()
 
 		cir := &instancepb.CreateInstanceRequest{
@@ -74,6 +77,42 @@ func createInstance(ctx context.Context) error {
 				return err
 			}
 			log.Println("instance created")
+		}
+	}
+
+	if db != "" {
+		dc, err := database.NewDatabaseAdminClient(ctx,
+			option.WithoutAuthentication(),
+			option.WithGRPCDialOption(grpc.WithInsecure()),
+			option.WithEndpoint("0.0.0.0:9010"),
+		)
+		if err != nil {
+			return err
+		}
+		defer func() { _ = dc.Close() }()
+		log.Printf("attempting to create database %v\n", db)
+		cdr := &databasepb.CreateDatabaseRequest{
+			Parent:          "projects/" + proj + "/instances/" + inst,
+			CreateStatement: "CREATE DATABASE " + db,
+		}
+		if cdrOp, err := dc.CreateDatabase(ctx, cdr); err != nil {
+			// get the status code
+			if errStatus, ok := status.FromError(err); ok {
+				// if the resource already exists, continue
+				if errStatus.Code() == codes.AlreadyExists {
+					log.Printf("database already exists, continuing\n")
+				} else {
+					return err
+				}
+			} else {
+				return err
+			}
+		} else {
+			_, err = cdrOp.Wait(ctx)
+			if err != nil {
+				return err
+			}
+			log.Println("database created")
 		}
 	}
 
