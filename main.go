@@ -24,12 +24,10 @@ func main() {
 			panic(err)
 		}
 	}()
-	(&exec.Cmd{
-		Path:   "./gateway_main",
-		Args:   []string{"--hostname", "0.0.0.0"},
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
-	}).Run()
+	cmd := exec.Command("./gateway_main", "--hostname", "0.0.0.0")
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }
 
 func ensureDatabase(ctx context.Context) error {
