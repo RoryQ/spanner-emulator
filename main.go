@@ -91,7 +91,7 @@ func ensureDatabase(ctx context.Context) error {
 		log.Printf("attempting to create database %v\n", db)
 		cdr := &databasepb.CreateDatabaseRequest{
 			Parent:          "projects/" + proj + "/instances/" + inst,
-			CreateStatement: "CREATE DATABASE " + db,
+			CreateStatement: "CREATE DATABASE `" + db + "`",
 		}
 		if cdrOp, err := dc.CreateDatabase(ctx, cdr); err != nil {
 			// get the status code
@@ -116,3 +116,4 @@ func ensureDatabase(ctx context.Context) error {
 
 	return nil
 }
+
