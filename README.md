@@ -8,7 +8,11 @@ with a convenience function to create an spanner instance on startup.
 Set the `SPANNER_DATABASE_ID`, `SPANNER_INSTANCE_ID` and `SPANNER_PROJECT_ID` environment variables when running the image.
 You can omit the database id if you just need an instance.
 ```sh
-docker run --env SPANNER_DATABASE_ID=db --env SPANNER_INSTANCE_ID=inst --env SPANNER_PROJECT_ID=proj roryq/spanner-emulator:latest
+docker run --env SPANNER_DATABASE_ID=db \
+  --env SPANNER_INSTANCE_ID=inst \
+  --env SPANNER_PROJECT_ID=proj \
+  -p 9010:9010 -p 9020:9020 \
+  roryq/spanner-emulator:latest
 ```
 
 ---
