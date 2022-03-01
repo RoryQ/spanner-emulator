@@ -8,9 +8,6 @@ name: Publish Docker image
 on:
   release:
     types: [published]
-  pull_request:
-    branches:
-      - '**'
 
 jobs:
   push_to_registry:
@@ -36,7 +33,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: dbut2/spanner-emulator
+          images: roryq/spanner-emulator
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
