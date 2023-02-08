@@ -24,7 +24,8 @@ func main() {
 			panic(err)
 		}
 	}()
-	cmd := exec.Command("./gateway_main", "--hostname", "0.0.0.0")
+
+	cmd := exec.Command("./binaries/gateway_main_/gateway_main", "--hostname", "0.0.0.0")
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	if err := cmd.Run(); err != nil {
