@@ -27,7 +27,9 @@ func main() {
 	cmd := exec.Command("./gateway_main", "--hostname", "0.0.0.0")
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
-	cmd.Run()
+	if err := cmd.Run(); err != nil {
+		panic(err)
+	}
 }
 
 func ensureDatabase(ctx context.Context) error {
@@ -116,4 +118,3 @@ func ensureDatabase(ctx context.Context) error {
 
 	return nil
 }
-
