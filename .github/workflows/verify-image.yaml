@@ -9,7 +9,7 @@ on:
   push:
 
 jobs:
-  push_to_registry:
+  verify-image:
     name: Verify Emulator Image
     runs-on: ubuntu-latest
     steps:
