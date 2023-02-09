@@ -4,7 +4,7 @@ set -e
 
 docker build . -t verify-emulator
 
-docker run --env SPANNER_DATABASE_ID=db \
+docker run --rm --env SPANNER_DATABASE_ID=db \
   --env SPANNER_INSTANCE_ID=inst \
   --env SPANNER_PROJECT_ID=proj \
   --detach \
@@ -18,7 +18,6 @@ docker logs verify &> verifylogs
 cat verifylogs
 
 docker stop verify > /dev/null
-docker rm verify > /dev/null
 
 echo verifying log output
 
