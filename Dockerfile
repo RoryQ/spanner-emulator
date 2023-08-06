@@ -1,5 +1,4 @@
-FROM golang:1.18 as builder
-ENV GO111MODULE=on
+FROM golang:1.20 as builder
 WORKDIR /build
 COPY go.mod go.sum main.go ./
 RUN go build .
