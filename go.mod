@@ -1,6 +1,6 @@
 module github.com/roryq/spanner-emulator
 
-go 1.20
+go 1.18
 
 require (
 	cloud.google.com/go/spanner v1.47.0
