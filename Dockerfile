@@ -1,6 +1,7 @@
-FROM golang:1.18 as builder
+FROM golang:1.21 as builder
 WORKDIR /build
 COPY go.mod go.sum main.go ./
+ENV CGO_ENABLED=0
 RUN go build .
 
 FROM gcr.io/cloud-spanner-emulator/emulator:1.5.8 as runtime
