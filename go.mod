@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	cloud.google.com/go/spanner v1.61.0
-	github.com/googleapis/gax-go/v2 v2.12.3
+	github.com/googleapis/gax-go/v2 v2.12.4
 	google.golang.org/api v0.177.0
 	google.golang.org/genproto v0.0.0-20240429193739-8cf5692501f6
 	google.golang.org/grpc v1.63.2
