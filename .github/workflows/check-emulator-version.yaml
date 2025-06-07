@@ -6,7 +6,6 @@ on:
     - cron: '0 0 * * *'
   # Allow manual triggering
   workflow_dispatch:
-  pull_request:
 
 jobs:
   check-emulator-version:
