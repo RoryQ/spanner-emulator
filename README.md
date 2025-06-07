@@ -2,7 +2,7 @@
 
 This repository wraps the official 
 [Google Cloud Spanner Emulator](https://github.com/GoogleCloudPlatform/cloud-spanner-emulator)
-with a convenience function to create an spanner instance on startup.
+with a convenience function to create a spanner instance on startup.
 
 ## Usage
 Set the `SPANNER_DATABASE_ID`, `SPANNER_INSTANCE_ID` and `SPANNER_PROJECT_ID` environment variables when running the image.
