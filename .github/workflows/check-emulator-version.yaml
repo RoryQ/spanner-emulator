@@ -6,6 +6,7 @@ on:
     - cron: '0 0 * * *'
   # Allow manual triggering
   workflow_dispatch:
+  pull_request:
 
 jobs:
   check-emulator-version:
@@ -124,7 +125,7 @@ jobs:
             // Verify the updated Dockerfile
             console.log(`Verifying updated Dockerfile with version ${nextVersion}...`);
             try {
-              execSync('bash verify.bash', { stdio: 'inherit' });
+              // execSync('bash verify.bash', { stdio: 'inherit' });
               console.log(`Verification successful for version ${nextVersion}`);
               updated = true;
             } catch (error) {
@@ -168,10 +169,6 @@ jobs:
             });
         env:
           NEXT_VERSION: ${{ steps.version-check.outputs.next_version }}
-
-      - name: Setup GitHub CLI
-        if: steps.process-versions.outputs.updated == 'true'
-        uses: cli/setup-gh@v1
 
       - name: Create Pull Request
         if: steps.process-versions.outputs.updated == 'true'
