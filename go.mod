@@ -2,8 +2,6 @@ module github.com/roryq/spanner-emulator
 
 go 1.23.0
 
-toolchain go1.24.1
-
 require (
 	cloud.google.com/go/spanner v1.80.0
 	github.com/googleapis/gax-go/v2 v2.14.2
