@@ -3,7 +3,7 @@ module github.com/roryq/spanner-emulator
 go 1.23.0
 
 require (
-	cloud.google.com/go/spanner v1.80.0
+	cloud.google.com/go/spanner v1.82.0
 	github.com/googleapis/gax-go/v2 v2.14.2
 	google.golang.org/api v0.236.0
 	google.golang.org/genproto v0.0.0-20250505200425-f936aa4a68b2
@@ -12,7 +12,7 @@ require (
 
 require (
 	cel.dev/expr v0.23.0 // indirect
-	cloud.google.com/go v0.120.0 // indirect
+	cloud.google.com/go v0.121.0 // indirect
 	cloud.google.com/go/auth v0.16.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.7.0 // indirect
