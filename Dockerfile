@@ -4,7 +4,7 @@ COPY go.mod go.sum main.go ./
 ENV CGO_ENABLED=0
 RUN go build .
 
-FROM gcr.io/cloud-spanner-emulator/emulator:1.5.36 AS runtime
+FROM gcr.io/cloud-spanner-emulator/emulator:1.5.37 AS runtime
 COPY backend/query backend/query
 COPY --from=builder /build/spanner-emulator ./
 EXPOSE 9010 9020
