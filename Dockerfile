@@ -1,4 +1,4 @@
-FROM golang:1.23 AS builder
+FROM golang:1.25 AS builder
 WORKDIR /build
 COPY go.mod go.sum main.go ./
 ENV CGO_ENABLED=0
