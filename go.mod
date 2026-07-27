@@ -5,7 +5,7 @@ go 1.25.8
 require (
 	cloud.google.com/go/spanner v1.93.0
 	github.com/googleapis/gax-go/v2 v2.23.0
-	google.golang.org/api v0.289.0
+	google.golang.org/api v0.290.0
 	google.golang.org/genproto v0.0.0-20260319201613-d00831a3d3e7
 	google.golang.org/grpc v1.82.1
 )
