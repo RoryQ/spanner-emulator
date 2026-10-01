@@ -79,6 +79,10 @@ func ensureDatabase(ctx context.Context) error {
 	}
 
 	if db != "" {
+		if inst == "" || proj == "" {
+			log.Println("skipping database creation: SPANNER_INSTANCE_ID and SPANNER_PROJECT_ID must be set when SPANNER_DATABASE_ID is provided")
+			return nil
+		}
 		dc, err := database.NewDatabaseAdminClient(ctx,
 			option.WithoutAuthentication(),
 			option.WithGRPCDialOption(grpc.WithInsecure()),
