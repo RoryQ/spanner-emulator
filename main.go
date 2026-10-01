@@ -97,7 +97,7 @@ func ensureDatabase(ctx context.Context) error {
 			Parent:          "projects/" + proj + "/instances/" + inst,
 			CreateStatement: "CREATE DATABASE `" + db + "`",
 		}
-		if cdrOp, err := dc.CreateDatabase(ctx, cdr); err != nil {
+		if cdrOp, err := dc.CreateDatabase(ctx, cdr, gax.WithGRPCOptions(grpc.WaitForReady(true))); err != nil {
 			// get the status code
 			if errStatus, ok := status.FromError(err); ok {
 				// if the resource already exists, continue
