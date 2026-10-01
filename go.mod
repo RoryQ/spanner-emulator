@@ -6,7 +6,6 @@ require (
 	cloud.google.com/go/spanner v1.95.1
 	github.com/googleapis/gax-go/v2 v2.26.2
 	google.golang.org/api v0.299.0
-	google.golang.org/genproto v0.0.0-20260715232425-e75dac1f907d
 	google.golang.org/grpc v1.84.0
 )
 
@@ -51,6 +50,7 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
+	google.golang.org/genproto v0.0.0-20260715232425-e75dac1f907d // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260715232425-e75dac1f907d // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260921155816-b14227669459 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
