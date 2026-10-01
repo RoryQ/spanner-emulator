@@ -31,29 +31,6 @@ docker run --rm --env SPANNER_DATABASE_ID=$SPANNER_DATABASE_ID \
   -p 9020:9020 \
   verify-emulator
 
-# wait for emulator to start
-MAX_SECONDS_WAIT=30
-attempt=1
-while [ $attempt -le $MAX_SECONDS_WAIT ]; do
-    if docker logs verify 2>&1 | grep -q "Cloud Spanner emulator running."; then
-        break
-    fi
-    sleep 1
-    attempt=$((attempt + 1))
-done
-
-if [ $attempt -gt $MAX_SECONDS_WAIT ]; then
-    echo "Timeout waiting for emulator to start"
-    exit 1
-fi
-
-docker logs verify &> verifylogs
-
-cat verifylogs
-
-echo verifying log output
-
-# Replace multiple greps with
 expected_patterns=(
     "instance created"
     "Cloud Spanner emulator running."
@@ -62,12 +39,37 @@ expected_patterns=(
     "database created"
 )
 
-for pattern in "${expected_patterns[@]}"; do
-    if ! grep -q "$pattern" verifylogs; then
-        echo "Error: Missing expected output: $pattern"
-        exit 1
+# wait for emulator to start and initialize
+MAX_SECONDS_WAIT=30
+attempt=1
+all_found=0
+while [ $attempt -le $MAX_SECONDS_WAIT ]; do
+    all_found=1
+    for pattern in "${expected_patterns[@]}"; do
+        if ! docker logs verify 2>&1 | grep -q "$pattern"; then
+            all_found=0
+            break
+        fi
+    done
+    if [ $all_found -eq 1 ]; then
+        break
     fi
+    sleep 1
+    attempt=$((attempt + 1))
 done
+
+docker logs verify &> verifylogs
+cat verifylogs
+
+if [ $all_found -ne 1 ]; then
+    echo "Timeout waiting for emulator to start and initialize"
+    for pattern in "${expected_patterns[@]}"; do
+        if ! grep -q "$pattern" verifylogs; then
+            echo "Error: Missing expected output: $pattern"
+        fi
+    done
+    exit 1
+fi
 
 echo logs contain expected output
 
