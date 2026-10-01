@@ -5,6 +5,9 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"os/signal"
+	"syscall"
+	"time"
 
 	database "cloud.google.com/go/spanner/admin/database/apiv1"
 	instance "cloud.google.com/go/spanner/admin/instance/apiv1"
@@ -18,16 +21,26 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	go func() {
 		if err := ensureDatabase(ctx); err != nil {
-			panic(err)
+			log.Printf("failed to ensure database: %v", err)
 		}
 	}()
-	cmd := exec.Command("./gateway_main", "--hostname", "0.0.0.0")
+
+	cmd := exec.CommandContext(ctx, "./gateway_main", "--hostname", "0.0.0.0")
+	cmd.Cancel = func() error {
+		return cmd.Process.Signal(syscall.SIGTERM)
+	}
+	cmd.WaitDelay = 5 * time.Second
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
-	cmd.Run()
+
+	if err := cmd.Run(); err != nil && ctx.Err() == nil {
+		log.Fatalf("gateway_main failed: %v", err)
+	}
 }
 
 func ensureDatabase(ctx context.Context) error {
