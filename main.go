@@ -14,6 +14,7 @@ import (
 	instancepb "google.golang.org/genproto/googleapis/spanner/admin/instance/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 )
 
@@ -38,7 +39,7 @@ func ensureDatabase(ctx context.Context) error {
 	if inst != "" && proj != "" {
 		ic, err := instance.NewInstanceAdminClient(ctx,
 			option.WithoutAuthentication(),
-			option.WithGRPCDialOption(grpc.WithInsecure()),
+			option.WithGRPCDialOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
 			option.WithEndpoint("0.0.0.0:9010"),
 		)
 		if err != nil {
@@ -85,7 +86,7 @@ func ensureDatabase(ctx context.Context) error {
 		}
 		dc, err := database.NewDatabaseAdminClient(ctx,
 			option.WithoutAuthentication(),
-			option.WithGRPCDialOption(grpc.WithInsecure()),
+			option.WithGRPCDialOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
 			option.WithEndpoint("0.0.0.0:9010"),
 		)
 		if err != nil {
