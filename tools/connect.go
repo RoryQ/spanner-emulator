@@ -9,6 +9,7 @@ import (
 	"cloud.google.com/go/spanner"
 	"google.golang.org/api/option"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 
 	client, err := spanner.NewClient(ctx, dbPath,
 		option.WithoutAuthentication(),
-		option.WithGRPCDialOption(grpc.WithInsecure()),
+		option.WithGRPCDialOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
 		option.WithEndpoint(emulatorHost),
 	)
 	if err != nil {
