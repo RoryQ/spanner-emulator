@@ -3,7 +3,7 @@ module github.com/roryq/spanner-emulator
 go 1.27
 
 require (
-	cloud.google.com/go/spanner v1.95.1
+	cloud.google.com/go/spanner v1.96.1
 	github.com/googleapis/gax-go/v2 v2.26.2
 	google.golang.org/api v0.299.0
 	google.golang.org/grpc v1.84.0
